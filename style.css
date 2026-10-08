@@ -1,0 +1,188 @@
+:root {
+  --accent: #e10600;
+  --fg: #f4f6f8;
+  --muted: #9aa4b2;
+  --panel: rgba(8, 12, 18, 0.74);
+  --line: rgba(255, 255, 255, 0.14);
+  --num: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
+  --ui: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: #000; color: var(--fg);
+  font-family: var(--ui);
+  user-select: none; -webkit-user-select: none;
+}
+
+canvas#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+.hidden { display: none !important; }
+
+button { font-family: var(--ui); cursor: pointer; }
+
+#loading {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  font-family: var(--num); letter-spacing: .3em; color: var(--muted);
+  background: #05070a;
+}
+
+/* ───────────── HUD ───────────── */
+#hud { position: fixed; inset: 0; pointer-events: none; }
+
+#hud-tl { position: absolute; top: 18px; left: 22px; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+#hud-tl .pos { font-family: var(--num); font-weight: 900; font-size: 64px; line-height: 1; font-style: italic; }
+#hud-tl .pos #pos-of { font-size: 26px; color: var(--muted); margin-left: 4px; }
+#hud-tl .lap { font-family: var(--num); font-size: 20px; margin-top: 6px; color: #fff; letter-spacing: .08em; }
+#hud-tl .lap span { font-weight: 700; }
+#hud-tl .lap #lap-of { color: var(--muted); font-weight: 500; }
+
+#hud-tr {
+  position: absolute; top: 18px; right: 22px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 16px; min-width: 230px;
+}
+#hud-tr .row { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+#hud-tr label { font-weight: 700; color: var(--muted); font-size: 14px; letter-spacing: .12em; }
+#hud-tr span { font-family: var(--num); font-size: 19px; font-variant-numeric: tabular-nums; }
+#hud-tr .row:first-child span { font-size: 24px; }
+
+#minimap {
+  position: absolute; left: 18px; bottom: 18px; width: 220px; height: 220px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 50%;
+}
+
+#meter { position: absolute; right: 18px; bottom: 12px; width: 300px; height: 300px; }
+#tacho { width: 300px; height: 300px; }
+#gear {
+  position: absolute; left: 0; right: 0; top: 92px; text-align: center;
+  font-family: var(--num); font-weight: 900; font-size: 58px; font-style: italic;
+}
+#speed {
+  position: absolute; left: 0; right: 0; top: 168px; text-align: center;
+  font-family: var(--num); font-weight: 700; font-size: 40px; font-variant-numeric: tabular-nums;
+}
+#speed small { display: block; font-size: 13px; color: var(--muted); letter-spacing: .2em; font-weight: 500; }
+
+#cam-label {
+  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+  font-weight: 700; letter-spacing: .25em; color: var(--muted); opacity: 0; transition: opacity .4s;
+}
+#cam-label.show { opacity: 1; }
+
+#banner {
+  position: absolute; top: 34%; left: 0; right: 0; text-align: center;
+  font-family: var(--num); font-weight: 900; font-style: italic; font-size: 120px;
+  text-shadow: 0 4px 30px rgba(0,0,0,.6); opacity: 0;
+}
+#banner.pop { animation: pop 1s ease-out forwards; }
+#banner.go { color: #3dff6e; }
+#banner.small { font-size: 56px; }
+@keyframes pop {
+  0% { opacity: 0; transform: scale(1.6); }
+  15% { opacity: 1; transform: scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: scale(.95); }
+}
+
+#wrongway {
+  position: absolute; top: 22%; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff; padding: 8px 26px; border-radius: 6px;
+  font-family: var(--num); font-weight: 900; font-size: 30px; letter-spacing: .1em;
+  animation: blink .6s infinite alternate;
+}
+@keyframes blink { to { opacity: .35; } }
+
+/* ───────────── Menu ───────────── */
+#menu { position: fixed; inset: 0; pointer-events: none; }
+.menu-panel {
+  pointer-events: auto;
+  position: absolute; top: 0; left: 0; bottom: 0; width: min(440px, 100%);
+  padding: 34px 34px 24px; overflow-y: auto;
+  background: linear-gradient(90deg, rgba(5,7,10,.94) 0%, rgba(5,7,10,.86) 75%, rgba(5,7,10,0) 100%);
+}
+.logo { display: flex; align-items: baseline; gap: 10px; }
+.logo .gt {
+  font-family: var(--num); font-weight: 900; font-style: italic; font-size: 76px; line-height: .9;
+  background: linear-gradient(180deg, #ff3b30, #b00000); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.logo .fan { font-family: var(--num); font-weight: 500; font-size: 26px; letter-spacing: .32em; }
+.tagline { color: var(--muted); margin-top: 6px; letter-spacing: .08em; }
+
+.menu-panel h3 {
+  margin: 24px 0 10px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--line); padding-bottom: 6px;
+}
+
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mode, .car-card {
+  text-align: left; color: var(--fg); background: rgba(255,255,255,.05);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  font-size: 18px; font-weight: 700; letter-spacing: .04em; transition: background .15s, border-color .15s;
+}
+.mode small, .car-card small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.mode:hover, .car-card:hover { background: rgba(255,255,255,.1); }
+.mode.active, .car-card.active { border-color: var(--accent); background: rgba(225,6,0,.16); }
+
+#car-list { display: grid; gap: 8px; }
+.car-card { display: flex; align-items: center; gap: 12px; }
+.car-card .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+
+#swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.swatch {
+  width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,.25);
+  box-shadow: inset 0 -6px 10px rgba(0,0,0,.35);
+}
+.swatch.active { border-color: #fff; outline: 2px solid var(--accent); outline-offset: 2px; }
+
+#start-btn {
+  margin-top: 26px; width: 100%; padding: 14px; border: 0; border-radius: 8px;
+  background: linear-gradient(180deg, #ff2a1f, #b30000); color: #fff;
+  font-family: var(--num); font-weight: 900; font-size: 24px; letter-spacing: .3em; text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(225,6,0,.35);
+}
+#start-btn:hover { filter: brightness(1.12); }
+
+.help { margin-top: 20px; font-size: 14px; line-height: 1.6; color: var(--muted); }
+.help b { color: var(--fg); }
+
+.car-info {
+  position: absolute; right: 30px; bottom: 30px; width: 320px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px;
+}
+#car-name { font-family: var(--num); font-weight: 900; font-style: italic; font-size: 26px; }
+#car-desc { color: var(--muted); margin: 2px 0 12px; }
+.stat { display: grid; grid-template-columns: 80px 1fr 92px; align-items: center; gap: 10px; margin: 6px 0; font-weight: 600; }
+.stat .bar { height: 6px; background: rgba(255,255,255,.12); border-radius: 3px; overflow: hidden; }
+.stat .bar i { display: block; height: 100%; background: linear-gradient(90deg, #ff6a3d, var(--accent)); }
+.stat .val { text-align: right; font-family: var(--num); font-size: 14px; }
+
+/* ───────────── Overlays ───────────── */
+.overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); }
+.box {
+  background: rgba(10,14,20,.92); border: 1px solid var(--line); border-radius: 12px;
+  padding: 28px 34px; min-width: 300px; display: grid; gap: 12px;
+}
+.box.wide { min-width: min(560px, 92vw); }
+.box h2 { font-family: var(--num); font-style: italic; font-size: 34px; text-align: center; margin-bottom: 6px; }
+.box button {
+  padding: 12px 18px; border-radius: 8px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.06); color: var(--fg); font-size: 18px; font-weight: 700; letter-spacing: .1em;
+}
+.box button:hover { background: rgba(225,6,0,.25); border-color: var(--accent); }
+.res-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+
+#res-table { width: 100%; border-collapse: collapse; font-size: 18px; }
+#res-table th { text-align: left; color: var(--muted); font-size: 13px; letter-spacing: .15em; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+#res-table td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,.06); font-variant-numeric: tabular-nums; }
+#res-table td.num { font-family: var(--num); font-size: 15px; }
+#res-table tr.me td { background: rgba(225,6,0,.18); font-weight: 700; }
+
+@media (max-width: 760px) {
+  #meter { transform: scale(.7); transform-origin: bottom right; }
+  #minimap { width: 150px; height: 150px; }
+  .car-info { display: none; }
+  #banner { font-size: 80px; }
+}

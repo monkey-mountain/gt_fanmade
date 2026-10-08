@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GT Fanmade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <div id="loading">LOADING…</div>
+
+  <!-- In-race HUD -->
+  <div id="hud" class="hidden">
+    <div id="hud-tl">
+      <div class="pos"><span id="pos-num">1</span><span id="pos-of">/6</span></div>
+      <div class="lap">LAP <span id="lap-num">1</span><span id="lap-of">/3</span></div>
+    </div>
+    <div id="hud-tr">
+      <div class="row"><label>TIME</label><span id="t-cur">0:00.000</span></div>
+      <div class="row"><label>LAST</label><span id="t-last">--:--.---</span></div>
+      <div class="row"><label>BEST</label><span id="t-best">--:--.---</span></div>
+    </div>
+    <canvas id="minimap" width="220" height="220"></canvas>
+    <div id="meter">
+      <canvas id="tacho" width="300" height="300"></canvas>
+      <div id="gear">N</div>
+      <div id="speed"><span id="spd">0</span><small>km/h</small></div>
+    </div>
+    <div id="cam-label"></div>
+    <div id="banner"></div>
+    <div id="wrongway" class="hidden">WRONG WAY</div>
+  </div>
+
+  <!-- Title / garage menu -->
+  <div id="menu" class="hidden">
+    <div class="menu-panel">
+      <div class="logo"><span class="gt">GT</span><span class="fan">FANMADE</span></div>
+      <div class="tagline">An unofficial fan-made racing tribute</div>
+
+      <h3>Mode</h3>
+      <div class="modes">
+        <button class="mode active" data-mode="race">Arcade Race<small>3 laps · 6 cars</small></button>
+        <button class="mode" data-mode="trial">Time Trial<small>Solo · chase your best lap</small></button>
+      </div>
+
+      <h3>Car</h3>
+      <div id="car-list"></div>
+
+      <h3>Paint</h3>
+      <div id="swatches"></div>
+
+      <button id="start-btn">Start</button>
+
+      <div class="help">
+        <b>↑ / W</b> accelerate · <b>↓ / S</b> brake / reverse · <b>← → / A D</b> steer<br>
+        <b>Space</b> handbrake · <b>C</b> camera · <b>R</b> reset car · <b>M</b> mute · <b>P / Esc</b> pause<br>
+        Gamepad: left stick steer, RT throttle, LT brake, B handbrake
+      </div>
+    </div>
+    <div class="car-info">
+      <div id="car-name"></div>
+      <div id="car-desc"></div>
+      <div id="car-stats"></div>
+    </div>
+  </div>
+
+  <div id="pause" class="overlay hidden">
+    <div class="box">
+      <h2>Paused</h2>
+      <button data-act="resume">Resume</button>
+      <button data-act="restart">Restart</button>
+      <button data-act="menu">Quit to Menu</button>
+    </div>
+  </div>
+
+  <div id="results" class="overlay hidden">
+    <div class="box wide">
+      <h2 id="res-title">Results</h2>
+      <table id="res-table"></table>
+      <div class="res-buttons">
+        <button data-act="restart">Race Again</button>
+        <button data-act="menu">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
